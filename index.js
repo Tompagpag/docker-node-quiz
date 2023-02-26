@@ -2,6 +2,7 @@ import readline from "readline";
 import keypress from "keypress";
 import chalk from "chalk";
 import { exec } from "child_process";
+import { nodeQuizz } from "./data.js";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -24,25 +25,27 @@ const logo = chalk.blue(`
 
 // Définition des options du menu
 const options = [
-  { name: "Learn you node", action: "learnyounode" },
-  { name: "Promise It Won't Hurt", action: "promise-it-wont-hurt" },
-  { name: "How to NPM", action: "how-to-npm" },
+  { name: "Testez vos connaissances sur NodeJS !", quizz_array: nodeQuizz },
+  { name: "Promise It Won't Hurt", action: "" },
+  { name: "How to NPM", action: "" },
   { name: "Quitter", action: "" },
 ];
 
 let selectedOption = 0; // Option sélectionnée
 
 // Fonction pour afficher les options du menu
-function printMenu() {
+function printMenu(sentence) {
   console.clear();
 
   console.log(logo);
-  console.log(`\n                 ${chalk.red.underline(`Sélectionnez une option :\n`)}`);
-  options.forEach((option, index) => {
+  console.log(
+    `\n                 ${chalk.red.underline(sentence)}`
+  );
+  options.forEach((elem, index) => {
     if (index === selectedOption) {
-      console.log(chalk.bgGreen(`> ${option.name}`));
+      console.log(chalk.bgGreen(`> ${elem.name}`));
     } else {
-      console.log(`  ${option.name}`);
+      console.log(`  ${elem.name}`);
     }
   });
 }
@@ -65,7 +68,19 @@ function handleKeypress(ch, key) {
       process.stdin.pause();
     } else {
       // L'utilisateur a choisi une Option
+      let choice = 0;
+      const quizz = options[selectedOption].quizz_array[0];
+      console.clear();
+      console.log(`${logo}\n\n`);
+      console.log(`${chalk.red(quizz.question)}\n\n`);
+      quizz.propositions.forEach((e) => {
+        let choice = 0;
+        console.log(`${chalk.bgGreen(e)}\n`);
+      });
       selectedOption = 0;
+      // console.log()
+
+
       // printMenu();
     }
   } else if (key && key.name === "up") {
@@ -87,4 +102,4 @@ if (process.stdin.isTTY) {
 process.stdin.resume();
 
 // Affichage du menu
-printMenu();
+printMenu(`Sélectionnez une option :\n`);
